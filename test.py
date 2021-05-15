@@ -7,6 +7,7 @@
 import time
 import cy_simulator
 import simulator
+import matplotlib.pyplot as plt
 
 def run_simulator(simulator):
     AU = (149.6e6 * 1000)
@@ -32,17 +33,25 @@ def run_simulator(simulator):
 def main():
     start = time.time()
     run_simulator(simulator)
-    total_time = time.time() - start
+    tiempoPy = time.time() - start
 
     start = time.time()
     run_simulator(cy_simulator)
-    cy_total_time = time.time() - start
+    tiempoCy = time.time() - start
 
-    speedUp = round(total_time/cy_total_time, 3)
-    print(f"Python time: {total_time} \n")
-    print(f"Cython time: {cy_total_time} \n")
+    speedUp = round(tiempoPy/tiempoCy, 3)
+    print(f"Python time: {tiempoPy} \n")
+    print(f"Cython time: {tiempoCy} \n")
     print(f"SpeedUp: {speedUp} \n")
+    return tiempoPy, tiempoCy
 
 
 if __name__ == '__main__':
-    main()
+    tiempoPy, tiempoCy = main()
+    tiempos = [tiempoPy,tiempoCy]
+    labels = ['Python','Cython']
+    plt.barh(labels,tiempos,align='center',alpha=0.5,color=['blue','green'])
+    plt.title('Rendimiento Cython vs Python')
+    plt.xlabel('Tiempo')
+    plt.savefig('rendimiento.png')
+    plt.show()
